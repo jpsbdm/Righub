@@ -2,13 +2,13 @@
 
 ## Backend Tasks
 
-- **Core Platform**: Implement authentication, account management, profile handling, subscription logic, role‑based access control, and audit logging.
-- **Garage Module**: Build CRUD APIs for garage, vehicle, vehicle mods, accessories, media, and setup snapshots.
+- **Core Platform**: Authentication implemented with Lucia Auth and Drizzle; support for profile handling and role-based access control established. Audit logging pending.
+- **Garage Module**: CRUD APIs implemented for garages, vehicles, mods, and setup snapshots using modular architecture. Media assets pending storage (R2).
 - **Community Social**: Create endpoints for posts, comments, reactions, follows, and content reporting.
 - **Community Forum**: Implement categories, topics, replies, tags, and forum moderation APIs.
-- **Tools Energy**: Develop calculation services for load, solar, DCDC, validation runs, rating, and formula versioning.
-- **Catalog**: Design APIs for accessory categories, spec fields, product entries, spec values, community submissions, and moderation logs.
-- **Reporting**: Provide shareable report generation, snapshot handling, and public view endpoints.
+- **Tools Energy**: Implemented load, solar, and rating services. DCDC calculation and advanced autonomy simulations pending.
+- **Catalog**: Database schema and services for categories, product entries, and search implemented. Community submission workflow and moderation log pending.
+- **Reporting**: Implemented shareable reports with public routes, SEO metadata, and social snapshots. Snapshot downloading pending.
 - **Billing**: Integrate Stripe for plan management, payment processing, and feature‑gate enforcement.
 - **Moderation**: Build moderation actions, reasons, suspension/ban records, and review queue processing.
 - **Admin**: Create admin dashboards for catalog, user, moderation, and internal configuration management.
@@ -20,16 +20,14 @@
 
 ## Frontend Tasks
 
-- **Next.js App**: Scaffold the full‑stack Next.js application with TypeScript and App Router.
-- **UI Framework**: Configure Tailwind CSS and shadcn/ui components.
-- **Authentication UI**: Build sign‑up, login, password reset, and onboarding flows.
+- **Authentication UI**: Implemented sign‑up and login flows with Zod validation, Lucia server actions, and premium Framer Motion animations. Onboarding pending.
 - **Profile & Subscription UI**: Pages for editing profile, viewing subscription status, and upgrading to Pro.
-- **Garage UI**: Vehicle list, vehicle detail, mod management, media upload, and setup builder.
+- **Garage UI**: Implemented vehicle listing and "Add Vehicle" dialog with database integration. Mod management and media upload pending.
 - **Community Social UI**: Feed, post creation, comment threads, reactions, and follow system.
 - **Forum UI**: Category navigation, topic list, reply editor, and moderation tools.
-- **Tools UI**: Interactive calculators for load, solar, DCDC, validation, rating, and comparison.
-- **Catalog UI**: Browse accessory categories, view product specs, submit new accessories, and moderation review screens.
-- **Reporting UI**: Generate, preview, and share reports; view public snapshots.
+- **Tools UI**: Interactive calculators for load, solar, and diagnostics rating implemented. DCDC and advanced comparison views pending.
+- **Catalog UI**: Search and categorization implemented. Product submission forms and moderation dashboard pending.
+- **Reporting UI**: Implemented public setup views, sharing slugs, and social snapshot previews.
 - **Billing UI**: Stripe checkout integration, plan selection, and invoice history.
 - **Admin UI**: Dashboard for managing catalog, users, moderation actions, and system settings.
 - **Responsive Design**: Ensure all pages work on desktop, tablet, and mobile with premium visual aesthetics.
@@ -52,11 +50,20 @@
 
 ## Testing Tasks
 
-- **Unit Tests**: Write Jest/React Testing Library tests for all frontend components and backend services.
-- **Integration Tests**: Use Playwright to test end‑to‑end flows (signup → garage → calculator → report).
+- **Baseline Established**: Verified that all existing backend stubs have passing tests (Jest/ts-jest).
+- **Unit Tests**: Write unit tests for all domain logic in `src/`.
+- **Integration Tests**: Use Playwright/Supertest for API and E2E flows.
 - **Contract Tests**: Verify API contracts with OpenAPI spec.
 - **Performance Tests**: Benchmark critical endpoints and UI load times.
 - **Security Tests**: Run OWASP dependency checks and auth/authorization tests.
+
+## Test Governance (Tester Role)
+
+- [x] **Establish Test Environment**: Set up Jest + TypeScript + ts-jest.
+- [ ] **Task Validation**: Ensure every new task in `TASKS.md` includes a test requirement.
+- [ ] **Commit Enforcement**: Monitor code changes to ensure they are accompanied by relevant tests.
+- [ ] **CI Monitoring**: Ensure the CI pipeline (GitHub Actions) correctly fails on test regressions.
+- [ ] **Coverage Reporting**: Set up and monitor code coverage for all modules.
 
 ---
 

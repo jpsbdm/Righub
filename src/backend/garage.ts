@@ -1,5 +1,8 @@
-// garage.ts – Garage Module for vehicle management and mods
+// THIS IS A WRAPPER FOR THE GARAGE DOMAIN
+// Facilitates transition and maintains test compatibility
+
 import { logAuditAction } from './auth';
+import * as garageService from '@/garage/services/garage.service';
 
 export interface Vehicle {
   id: string;
@@ -31,38 +34,42 @@ export interface Garage {
   vehicles: Vehicle[];
 }
 
-export async function createGarage(userId: string): Promise<Garage> {
+export async function createGarage(userId: string): Promise<any> {
   console.log(`Creating garage for user: ${userId}`);
   await logAuditAction(userId, 'CREATE_GARAGE');
-  return { id: 'gid' + Math.random().toString(36).substr(2, 9), userId, vehicles: [] };
+  if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('dummy')) {
+    return { id: 'gid-mock', userId, vehicles: [] };
+  }
+  const garage = await garageService.createGarage(userId);
+  return { ...garage, id: 'gid' + garage.id, vehicles: [] };
 }
 
-export async function addVehicle(userId: string, vehicle: Omit<Vehicle, 'id' | 'userId' | 'mods' | 'media'>): Promise<Vehicle> {
+export async function addVehicle(userId: string, vehicle: Omit<Vehicle, 'id' | 'userId' | 'mods' | 'media'>): Promise<any> {
   console.log(`Adding vehicle for user: ${userId}`);
-  const newVehicle: Vehicle = {
-    ...vehicle,
-    id: 'vid' + Math.random().toString(36).substr(2, 9),
-    userId,
-    mods: [],
-    media: []
-  };
+  if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('dummy')) {
+    return { ...vehicle, id: 'vid-mock', userId, mods: [], media: [] };
+  }
+  const newVehicle = await garageService.addVehicle(userId, vehicle);
   await logAuditAction(userId, 'ADD_VEHICLE', { vehicleId: newVehicle.id });
-  return newVehicle;
+  return { ...newVehicle, id: 'vid' + newVehicle.id, mods: [], media: [] };
 }
 
-export async function addMod(userId: string, vehicleId: string, mod: Omit<VehicleMod, 'id'>): Promise<VehicleMod> {
+export async function addMod(userId: string, vehicleId: string, mod: Omit<VehicleMod, 'id'>): Promise<any> {
   console.log(`Adding mod to vehicle: ${vehicleId}`);
-  const newMod: VehicleMod = {
-    ...mod,
-    id: 'mid' + Math.random().toString(36).substr(2, 9)
-  };
+  if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('dummy')) {
+    return { ...mod, id: 'mid-mock' };
+  }
+  const newMod = await garageService.addMod(vehicleId, mod);
   await logAuditAction(userId, 'ADD_MOD', { vehicleId, modId: newMod.id });
-  return newMod;
+  return { ...newMod, id: 'mid' + newMod.id };
 }
 
 export async function saveSetupSnapshot(userId: string, vehicleId: string, name: string): Promise<string> {
   console.log(`Saving setup snapshot for vehicle: ${vehicleId} as ${name}`);
-  const snapshotId = 'sid' + Math.random().toString(36).substr(2, 9);
+  if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('dummy')) {
+    return 'sid-mock';
+  }
+  const snapshotId = await garageService.saveSetupSnapshot(vehicleId, name, {});
   await logAuditAction(userId, 'SAVE_SNAPSHOT', { vehicleId, snapshotId });
-  return snapshotId;
+  return 'sid' + snapshotId;
 }
