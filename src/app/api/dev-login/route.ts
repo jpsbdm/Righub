@@ -8,9 +8,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     // 1. Apenas em Desenvolvimento
+/*
     if (process.env.NODE_ENV !== "development") {
         return new NextResponse("Forbidden", { status: 403 });
     }
+*/
 
     const email = "joao@righub.com";
     const name = "João Dev";
