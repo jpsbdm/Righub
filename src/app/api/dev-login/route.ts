@@ -26,7 +26,9 @@ export async function GET(request: NextRequest) {
 
         if (!user) {
             console.log("Usuário não encontrado, criando...");
+            const { generateId } = await import("lucia");
             const results = await db.insert(users).values({
+                id: generateId(15),
                 email,
                 name,
                 role: "admin",
