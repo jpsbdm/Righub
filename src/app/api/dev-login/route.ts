@@ -55,8 +55,12 @@ export async function GET(request: NextRequest) {
         );
 
         return redirect("/feed");
-    } catch (error) {
+    } catch (error: any) {
         console.error("Erro no Dev Login:", error);
-        return new NextResponse("Internal Server Error", { status: 500 });
+        return new NextResponse(JSON.stringify({ 
+            message: "Internal Server Error", 
+            error: error?.message,
+            stack: error?.stack 
+        }), { status: 500 });
     }
 }
