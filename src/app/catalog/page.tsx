@@ -1,4 +1,4 @@
-import { getCategories, searchProducts } from "@/catalog/services/catalog.service";
+import { getCategories, searchProducts, seedCategories } from "@/catalog/services/catalog.service";
 export const dynamic = 'force-dynamic';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,13 @@ export default async function CatalogPage({
     searchParams: Promise<{ q?: string, category?: string }>
 }) {
     const params = await searchParams;
-    const categories = await getCategories();
+    let categories = await getCategories();
+
+    // Auto-seed
+    if (categories.length === 0) {
+        await seedCategories();
+        categories = await getCategories();
+    }
     const products = await searchProducts({
         query: params.q,
         categoryId: params.category

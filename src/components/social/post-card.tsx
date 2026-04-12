@@ -34,7 +34,7 @@ export function PostCard({ post }: PostCardProps) {
     return (
         <Card className="bg-card/50 backdrop-blur-sm border-border/50 overflow-hidden hover:border-primary/30 transition-all shadow-xl">
             <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-                <Link href={`/user/${post.userId}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <Link href={`/user/${post.user?.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                     <Avatar className="h-10 w-10 border border-primary/20">
                         <AvatarImage src={post.user?.avatarUrl || undefined} />
                         <AvatarFallback className="bg-primary/10 text-primary">

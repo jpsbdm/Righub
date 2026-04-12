@@ -59,3 +59,16 @@ export async function submitProduct(userId: string, data: {
     }).returning();
     return submission;
 }
+export async function seedCategories() {
+    const categories = [
+        { name: "Baterias", slug: "baterias", icon: "Battery" },
+        { name: "Painéis Solares", slug: "paineis-solares", icon: "Sun" },
+        { name: "Inversores & Carregadores", slug: "inversores", icon: "Zap" },
+        { name: "Geladeiras & Freezers", slug: "geladeiras", icon: "Refrigerator" },
+        { name: "Iluminação", slug: "iluminacao", icon: "Lightbulb" },
+    ];
+
+    for (const cat of categories) {
+        await db.insert(catalogCategories).values(cat).onConflictDoNothing();
+    }
+}
