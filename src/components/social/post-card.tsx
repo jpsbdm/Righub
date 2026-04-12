@@ -17,12 +17,15 @@ import { likePostAction } from "@/social/actions";
 import Link from "next/link";
 // ... (outros imports ja existentes no arquivo)
 
+import Image from "next/image";
+
 interface PostCardProps {
     post: any;
     currentUserId?: string;
+    priority?: boolean;
 }
 
-export function PostCard({ post }: PostCardProps) {
+export function PostCard({ post, priority = false }: PostCardProps) {
     const [isLiking, startTransition] = useTransition();
 
     const handleLike = () => {
@@ -36,7 +39,7 @@ export function PostCard({ post }: PostCardProps) {
             <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
                 <Link href={`/user/${post.user?.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                     <Avatar className="h-10 w-10 border border-primary/20">
-                        <AvatarImage src={post.user?.avatarUrl || undefined} />
+                        <AvatarImage src={post.user?.avatarUrl || undefined} alt={post.user?.name || "User avatar"} />
                         <AvatarFallback className="bg-primary/10 text-primary">
                             {post.user?.name?.substring(0, 2).toUpperCase() || "RH"}
                         </AvatarFallback>
@@ -44,15 +47,15 @@ export function PostCard({ post }: PostCardProps) {
                     <div>
                         <h3 className="text-sm font-bold tracking-tight">{post.user?.name || "Aventureiro"}</h3>
                         <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                            <Clock className="h-3 w-3" />
-                            {new Date(post.createdAt).toLocaleDateString()}
+                            <Clock className="h-3 w-3" aria-hidden="true" />
+                            {new Date(post.createdAt).toLocaleDateString("en-AU")}
                             <Badge variant="outline" className="text-[8px] h-3 px-1 ml-1 bg-primary/5 capitalize">
                                 {post.type}
                             </Badge>
                         </div>
                     </div>
                 </Link>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" aria-label="More options">
                     <MoreHorizontal className="h-4 w-4" />
                 </Button>
             </CardHeader>
@@ -82,15 +85,18 @@ export function PostCard({ post }: PostCardProps) {
                 {/* Media Carousel Simulation */}
                 {post.mediaUrls && post.mediaUrls.length > 0 && (
                     <div className="rounded-xl overflow-hidden aspect-video relative group bg-black/20">
-                         {/* For now we show the first image or a placeholder */}
-                         <img 
+                         {/* Using Next.js Image for performance optimization */}
+                         <Image 
                             src={post.mediaUrls[0]} 
-                            alt="Post content" 
-                            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+                            alt={`Rig setup by ${post.user?.name || 'user'}`} 
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            priority={priority}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                          />
                          {post.mediaUrls.length > 1 && (
                             <Badge className="absolute bottom-3 right-3 bg-black/50 backdrop-blur-md border-none text-[10px]">
-                                +{post.mediaUrls.length - 1} fotos
+                                +{post.mediaUrls.length - 1} photos
                             </Badge>
                          )}
                     </div>
@@ -101,17 +107,17 @@ export function PostCard({ post }: PostCardProps) {
                     <div className="mt-4 p-3 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-between group/build cursor-pointer hover:bg-primary/10 transition-colors">
                         <div className="flex items-center gap-3">
                             <div className="h-10 w-10 rounded-lg bg-background/50 flex items-center justify-center text-primary border border-primary/10 shadow-inner">
-                                <Car className="h-6 w-6" />
+                                <Car className="h-6 w-6" aria-hidden="true" />
                             </div>
                             <div>
-                                <p className="text-[10px] uppercase font-black text-primary/60 tracking-widest">Build Anexada</p>
+                                <p className="text-[10px] uppercase font-black text-primary/60 tracking-widest">Build Attached</p>
                                 <h4 className="text-sm font-bold truncate">
                                     {post.vehicle.year} {post.vehicle.make} {post.vehicle.model}
                                 </h4>
                             </div>
                         </div>
                         <Button variant="ghost" size="sm" className="opacity-0 group-hover/build:opacity-100 transition-opacity">
-                            Ver Specs <ChevronRight className="ml-1 h-3 w-3" />
+                            View Specs <ChevronRight className="ml-1 h-3 w-3" />
                         </Button>
                     </div>
                 )}
@@ -122,18 +128,25 @@ export function PostCard({ post }: PostCardProps) {
                     <button 
                         onClick={handleLike}
                         disabled={isLiking}
-                        className={`flex items-center gap-1.5 text-xs font-semibold transition-colors hover:text-primary ${isLiking ? 'opacity-50' : ''}`}
+                        aria-label={`Like post. Current likes: ${post.likesCount}`}
+                        className={`flex items-center gap-1.5 text-xs font-semibold transition-colors hover:text-primary ${isLiking ? 'opacity-50' : ''} ${post.isLiked ? 'text-primary' : ''}`}
                     >
-                        <Heart className={`h-4 w-4 ${post.isLiked ? 'fill-primary text-primary' : ''}`} />
+                        <Heart className={`h-4 w-4 ${post.isLiked ? 'fill-primary text-primary' : ''}`} aria-hidden="true" />
                         <span>{post.likesCount}</span>
                     </button>
-                    <button className="flex items-center gap-1.5 text-xs font-semibold transition-colors hover:text-primary">
-                        <MessageSquare className="h-4 w-4" />
+                    <button 
+                        className="flex items-center gap-1.5 text-xs font-semibold transition-colors hover:text-primary"
+                        aria-label={`View comments. Current comments: ${post.commentsCount}`}
+                    >
+                        <MessageSquare className="h-4 w-4" aria-hidden="true" />
                         <span>{post.commentsCount}</span>
                     </button>
                 </div>
-                <button className="flex items-center gap-1.5 text-xs font-semibold transition-colors hover:text-primary">
-                    <Share2 className="h-4 w-4" />
+                <button 
+                    className="flex items-center gap-1.5 text-xs font-semibold transition-colors hover:text-primary"
+                    aria-label="Share post"
+                >
+                    <Share2 className="h-4 w-4" aria-hidden="true" />
                 </button>
             </CardFooter>
         </Card>

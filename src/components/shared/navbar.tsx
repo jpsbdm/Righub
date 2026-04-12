@@ -96,46 +96,50 @@ export function Navbar({ user }: { user: any }) {
                             <button 
                                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                                 className="flex items-center gap-2 p-1 pl-1 pr-2 rounded-full hover:bg-muted transition-colors border border-border/20"
+                                aria-label="Open user menu"
+                                aria-expanded={isUserMenuOpen}
+                                aria-haspopup="true"
                             >
                                 <Avatar className="h-7 w-7 border border-primary/20">
-                                    <AvatarImage src={user.avatarUrl} />
+                                    <AvatarImage src={user.avatarUrl} alt={user.name || "User avatar"} />
                                     <AvatarFallback className="bg-primary/10 text-[10px] font-bold text-primary italic">
                                         {user.name?.substring(0, 2).toUpperCase() || "RH"}
                                     </AvatarFallback>
                                 </Avatar>
-                                <ChevronDown className={cn("h-3 w-3 text-muted-foreground transition-transform", isUserMenuOpen && "rotate-180")} />
+                                <ChevronDown className={cn("h-3 w-3 text-muted-foreground transition-transform", isUserMenuOpen && "rotate-180")} aria-hidden="true" />
                             </button>
 
                             {/* User Dropdown */}
                             {isUserMenuOpen && (
-                                <div className="absolute top-10 right-0 w-56 p-2 bg-background border border-border shadow-2xl rounded-2xl animate-in fade-in zoom-in duration-200">
+                                <div className="absolute top-10 right-0 w-56 p-2 bg-background border border-border shadow-2xl rounded-2xl animate-in fade-in zoom-in duration-200" role="menu">
                                     <div className="px-3 py-2 border-b border-border/50 mb-1">
                                         <p className="text-xs font-black uppercase text-muted-foreground tracking-widest mb-0.5">Logged in as</p>
                                         <p className="text-sm font-bold truncate">{user.name || "RigHub Member"}</p>
                                     </div>
                                     <div className="space-y-0.5">
-                                        <Link href={`/user/${user.id}`} onClick={() => setIsUserMenuOpen(false)}>
+                                        <Link href={`/user/${user.id}`} onClick={() => setIsUserMenuOpen(false)} role="menuitem">
                                             <Button variant="ghost" className="w-full justify-start text-xs rounded-xl h-10 font-medium">
-                                                <User className="mr-2 h-4 w-4" /> View Profile
+                                                <User className="mr-2 h-4 w-4" aria-hidden="true" /> View Profile
                                             </Button>
                                         </Link>
-                                        <Link href="/garage" onClick={() => setIsUserMenuOpen(false)}>
+                                        <Link href="/garage" onClick={() => setIsUserMenuOpen(false)} role="menuitem">
                                             <Button variant="ghost" className="w-full justify-start text-xs rounded-xl h-10 font-medium">
-                                                <Car className="mr-2 h-4 w-4" /> My Garage
+                                                <Car className="mr-2 h-4 w-4" aria-hidden="true" /> My Garage
                                             </Button>
                                         </Link>
-                                        <Link href="/settings" onClick={() => setIsUserMenuOpen(false)}>
+                                        <Link href="/settings" onClick={() => setIsUserMenuOpen(false)} role="menuitem">
                                             <Button variant="ghost" className="w-full justify-start text-xs rounded-xl h-10 font-medium">
-                                                <Settings className="mr-2 h-4 w-4" /> Settings
+                                                <Settings className="mr-2 h-4 w-4" aria-hidden="true" /> Settings
                                             </Button>
                                         </Link>
-                                        <div className="h-px bg-border/50 my-1 mx-2" />
+                                        <div className="h-px bg-border/50 my-1 mx-2" aria-hidden="true" />
                                         <Button 
                                             variant="ghost" 
                                             className="w-full justify-start text-xs rounded-xl h-10 font-bold text-destructive hover:bg-destructive/10 hover:text-destructive"
                                             onClick={handleLogout}
+                                            role="menuitem"
                                         >
-                                            <LogOut className="mr-2 h-4 w-4" /> Log out
+                                            <LogOut className="mr-2 h-4 w-4" aria-hidden="true" /> Log out
                                         </Button>
                                     </div>
                                 </div>
@@ -152,8 +156,10 @@ export function Navbar({ user }: { user: any }) {
                         size="icon" 
                         className="md:hidden rounded-full"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        aria-label={isMobileMenuOpen ? "Close main menu" : "Open main menu"}
+                        aria-expanded={isMobileMenuOpen}
                     >
-                        {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                        {isMobileMenuOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
                     </Button>
                 </div>
             </div>

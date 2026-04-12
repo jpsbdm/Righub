@@ -75,8 +75,8 @@ export default async function FeedPage() {
                                     <p className="text-sm">Be the first to share your journey!</p>
                                 </div>
                             ) : (
-                                posts.map((post) => (
-                                    <PostCard key={post.id} post={post} currentUserId={user.id} />
+                                posts.map((post, index) => (
+                                    <PostCard key={post.id} post={post} currentUserId={user.id} priority={index < 2} />
                                 ))
                             )}
                         </div>
