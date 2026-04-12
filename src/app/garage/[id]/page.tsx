@@ -22,6 +22,7 @@ import {
     Compass
 } from "lucide-react";
 import Link from "next/link";
+import { VehicleHeaderActions, AddModActionWrapper } from "@/components/garage/vehicle-header-actions";
 
 export default async function VehicleDetailPage({ params }: { params: { id: string } }) {
     const { id } = await params;
@@ -37,31 +38,13 @@ export default async function VehicleDetailPage({ params }: { params: { id: stri
     const [owner] = await db.select().from(users).where(eq(users.id, vehicle.userId));
     const mods = await db.select().from(vehicleMods).where(eq(vehicleMods.vehicleId, id));
     const media = await db.select().from(mediaAssets).where(eq(mediaAssets.vehicleId, id));
-
+    
     const isOwner = currentUser.id === vehicle.userId;
 
     return (
         <div className="min-h-screen bg-background pb-20">
-            {/* Context Navigation */}
-            <div className="border-b border-border/50 bg-card/20 backdrop-blur-md sticky top-16 z-30">
-                <div className="container mx-auto px-4 max-w-6xl h-14 flex items-center justify-between">
-                    <Link href="/garage">
-                        <Button variant="ghost" size="sm" className="gap-2 font-bold text-muted-foreground hover:text-foreground">
-                            <ChevronLeft className="h-4 w-4" /> Back to Garage
-                        </Button>
-                    </Link>
-                    <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl">
-                            <Share2 className="h-4 w-4" />
-                        </Button>
-                        {isOwner && (
-                            <Button variant="secondary" size="sm" className="gap-2 font-bold rounded-xl px-4">
-                                <Settings className="h-4 w-4" /> Edit Rig
-                            </Button>
-                        )}
-                    </div>
-                </div>
-            </div>
+            {/* Context Navigation - Client Component Actions */}
+            <VehicleHeaderActions vehicleId={id} isOwner={isOwner} />
 
             {/* Premium Header Section */}
             <div className="relative border-b border-border/50 overflow-hidden bg-muted/30">
@@ -96,13 +79,15 @@ export default async function VehicleDetailPage({ params }: { params: { id: stri
                             
                             <div className="flex flex-wrap gap-4 pt-4">
                                 <Link href={`/tools/load-calculator?vehicleId=${id}`}>
-                                    <Button className="h-14 px-8 rounded-2xl font-black text-lg shadow-xl shadow-primary/20 gap-3">
+                                    <Button className="h-14 px-8 rounded-2xl font-black text-lg shadow-xl shadow-primary/20 gap-3 cursor-pointer">
                                         <Zap className="h-5 w-5" /> ENERGY HUB
                                     </Button>
                                 </Link>
-                                <Button variant="outline" className="h-14 px-8 rounded-2xl font-black text-lg border-border/50 gap-3 bg-background/50">
-                                    <Compass className="h-5 w-5" /> EXPEDITIONS
-                                </Button>
+                                <Link href="/tools">
+                                    <Button variant="outline" className="h-14 px-8 rounded-2xl font-black text-lg border-border/50 gap-3 bg-background/50 cursor-pointer">
+                                        <Compass className="h-5 w-5" /> EXPEDITIONS
+                                    </Button>
+                                </Link>
                             </div>
                         </div>
 
@@ -139,11 +124,7 @@ export default async function VehicleDetailPage({ params }: { params: { id: stri
                                 <h2 className="text-2xl font-black italic tracking-tighter uppercase flex items-center gap-3">
                                     <Wrench className="h-6 w-6 text-primary" /> Modifications
                                 </h2>
-                                {isOwner && (
-                                    <Button variant="ghost" size="sm" className="font-bold text-primary">
-                                        + Add Mod
-                                    </Button>
-                                )}
+                                {isOwner && <AddModActionWrapper vehicleId={id} />}
                             </div>
                             
                             {mods.length === 0 ? (

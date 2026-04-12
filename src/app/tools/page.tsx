@@ -142,7 +142,7 @@ export default function ToolboxPage() {
                                         href={tool.comingSoon ? "#" : tool.href}
                                         className={`group relative ${tool.comingSoon ? "cursor-not-allowed" : "cursor-pointer"}`}
                                     >
-                                        <div className="h-full p-8 rounded-[2.5rem] bg-card/60 backdrop-blur-xl border border-border/50 hover:border-primary/40 transition-all shadow-xl group-hover:shadow-primary/5 overflow-hidden flex flex-col justify-between">
+                                        <div className="h-full p-8 rounded-[2.5rem] bg-card/60 backdrop-blur-xl border border-border/50 hover:border-primary/40 transition-all shadow-xl group-hover:shadow-primary/5 overflow-hidden flex flex-col justify-between cursor-pointer">
                                             {/* Top Row: Icon + Badges */}
                                             <div className="flex items-start justify-between mb-8">
                                                 <div className="h-14 w-14 rounded-2xl bg-muted/80 flex items-center justify-center text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-all">

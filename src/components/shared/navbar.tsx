@@ -190,14 +190,14 @@ export function Navbar({ user }: { user: any }) {
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className="flex items-center gap-3 p-4 rounded-2xl font-bold hover:bg-muted"
                                 >
-                                    <User className="h-5 w-5" /> Meu Perfil
+                                    <User className="h-5 w-5" /> View Profile
                                 </Link>
                                 <button 
                                     onClick={handleLogout}
-                                    className="flex items-center gap-3 p-4 rounded-2xl font-bold text-destructive hover:bg-destructive/10 transition-colors w-full text-left"
+                                    className="flex items-center gap-3 p-4 rounded-2xl font-bold text-destructive hover:bg-destructive/10 transition-colors w-full text-left cursor-pointer"
                                 >
                                     <LogOut className="h-5 w-5" />
-                                    Sair da Conta
+                                    Log out
                                 </button>
                             </>
                         )}

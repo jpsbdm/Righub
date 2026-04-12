@@ -47,7 +47,7 @@ export default function ForumCategoryList({ categories }: { categories: Category
                     transition={{ delay: idx * 0.05 }}
                 >
                     <Link href={`/forum/c/${category.slug}`}>
-                        <div className="flex items-center justify-between p-6 rounded-[1.5rem] bg-card/40 border border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all group">
+                        <div className="flex items-center justify-between p-6 rounded-[1.5rem] bg-card/40 border border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all group cursor-pointer">
                             <div className="flex items-center gap-6">
                                 <div className="h-14 w-14 rounded-2xl bg-muted/50 flex items-center justify-center text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-all shadow-inner">
                                     {getIcon(category.icon)}
