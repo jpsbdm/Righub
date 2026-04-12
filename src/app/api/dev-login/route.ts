@@ -19,9 +19,8 @@ export async function GET(request: NextRequest) {
         console.log("Tentando logar usuário dev:", email);
         
         // 2. Tentar buscar ou criar de forma mais direta
-        let user = await db.query.users.findFirst({
-            where: (users, { eq }) => eq(users.email, email)
-        });
+        const existingUsers = await db.select().from(users).where(eq(users.email, email)).limit(1);
+        let user = existingUsers[0];
 
         if (!user) {
             console.log("Usuário não encontrado, criando...");

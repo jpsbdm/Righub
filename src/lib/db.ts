@@ -54,4 +54,4 @@ function createDb() {
   return drizzlePg(pool, { schema });
 }
 
-export const db = createDb();
+export const db = createDb() as ReturnType<typeof drizzle<typeof schema>>;
