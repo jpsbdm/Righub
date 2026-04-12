@@ -101,7 +101,7 @@
   html {
     @apply font-sans;
   }
-  button, [role="button"], .cursor-pointer {
+  button, a, [role="button"], .cursor-pointer, label {
     cursor: pointer !important;
   }
   

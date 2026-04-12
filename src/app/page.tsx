@@ -30,11 +30,10 @@ export default function Home() {
           className="hidden sm:mb-8 sm:flex sm:justify-center"
         >
           <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-muted-foreground ring-1 ring-border hover:ring-primary/50 transition-all bg-card/50 backdrop-blur-sm">
-            Anouncing our beta release.{" "}
-            <a href="#" className="font-semibold text-primary">
-              <span className="absolute inset-0" aria-hidden="true" />
-              Read more <span aria-hidden="true">&rarr;</span>
-            </a>
+            Join the community of overlanders.{" "}
+            <Link href="/signup" className="font-semibold text-primary">
+              Sign up today <span aria-hidden="true">&rarr;</span>
+            </Link>
           </div>
         </motion.div>
         
