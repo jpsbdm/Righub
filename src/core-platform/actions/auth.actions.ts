@@ -41,9 +41,13 @@ export async function signUpAction(formData: FormData) {
 		(await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 		
 		return { success: true };
-	} catch (e) {
-		// check for unique constraint violation
-		return { error: "Email already exists" };
+	} catch (e: any) {
+		console.error("Erro no cadastro:", e);
+		// PostgreSQL unique constraint violation code
+		if (e?.code === "23505") {
+			return { error: "Email already exists" };
+		}
+		return { error: `Erro técnico: ${e?.message || "Erro desconhecido"}` };
 	}
 }
 
