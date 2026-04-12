@@ -8,6 +8,7 @@ const inter = Inter({
 });
 
 import { CSPostHogProvider } from "@/lib/posthog";
+import { Navbar } from "@/components/shared/navbar";
 
 export const metadata: Metadata = {
   title: "RigHub | Energy Intelligence & Off-Grid Community",
@@ -21,8 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} antialiased`} suppressHydrationWarning>
-      <body className="min-h-screen bg-background font-sans text-foreground">
+      <body className="min-h-screen bg-background font-sans text-foreground pt-16">
         <CSPostHogProvider>
+          <Navbar />
           {children}
         </CSPostHogProvider>
       </body>

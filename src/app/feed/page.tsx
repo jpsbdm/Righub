@@ -14,6 +14,7 @@ import {
     Car
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function FeedPage() {
     const sessionId = (await cookies()).get(lucia.sessionCookieName)?.value ?? null;
@@ -35,15 +36,21 @@ export default async function FeedPage() {
                         <div className="p-4 rounded-xl bg-card/40 border border-border/50">
                             <h2 className="text-xs font-black uppercase text-muted-foreground tracking-widest mb-4">Explorar</h2>
                             <nav className="space-y-1">
-                                <Button variant="ghost" className="w-full justify-start text-primary font-bold bg-primary/5">
-                                    <Users className="mr-2 h-4 w-4" /> Global Feed
-                                </Button>
-                                <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground">
-                                    <Navigation className="mr-2 h-4 w-4" /> Expedições
-                                </Button>
-                                <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground">
-                                    <TrendingUp className="mr-2 h-4 w-4" /> Trending Builds
-                                </Button>
+                                <Link href="/feed" className="block">
+                                    <Button variant="ghost" className="w-full justify-start text-primary font-bold bg-primary/5">
+                                        <Users className="mr-2 h-4 w-4" /> Global Feed
+                                    </Button>
+                                </Link>
+                                <Link href="/forum" className="block">
+                                    <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground">
+                                        <Navigation className="mr-2 h-4 w-4" /> Expedições
+                                    </Button>
+                                </Link>
+                                <Link href="/catalog" className="block">
+                                    <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground">
+                                        <TrendingUp className="mr-2 h-4 w-4" /> Trending Builds
+                                    </Button>
+                                </Link>
                             </nav>
                         </div>
 
@@ -58,10 +65,6 @@ export default async function FeedPage() {
 
                     {/* Main Content: Feed */}
                     <div className="lg:col-span-2 space-y-6">
-                        <header className="mb-6 lg:hidden">
-                            <h1 className="text-2xl font-black italic tracking-tighter">THE FEED</h1>
-                        </header>
-
                         <CreatePostForm vehicles={vehicles} />
 
                         <div className="space-y-6">
@@ -93,7 +96,9 @@ export default async function FeedPage() {
                             <div className="relative z-10">
                                 <h3 className="text-xl font-black italic mb-2 tracking-tighter">PRO RIGS</h3>
                                 <p className="text-sm opacity-90 leading-snug mb-4">Tenha acesso a specs detalhadas e chats com instaladores.</p>
-                                <Button variant="secondary" size="sm" className="w-full rounded-full font-bold">Ver Planos</Button>
+                                <Link href="/pricing" className="block w-full">
+                                    <Button variant="secondary" size="sm" className="w-full rounded-full font-bold">Ver Planos</Button>
+                                </Link>
                             </div>
                             <div className="absolute -bottom-6 -right-6 opacity-20 transform group-hover:scale-110 transition-transform">
                                 <LayoutDashboard className="h-32 w-32" />
