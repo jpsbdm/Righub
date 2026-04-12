@@ -14,8 +14,25 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+interface Tool {
+    name: string;
+    description: string;
+    href: string;
+    icon: React.ReactNode;
+    isPro: boolean;
+    isNew?: boolean;
+    comingSoon?: boolean;
+}
+
+interface Category {
+    title: string;
+    description: string;
+    icon: React.ReactNode;
+    tools: Tool[];
+}
+
 export default function ToolboxPage() {
-    const categories = [
+    const categories: Category[] = [
         {
             title: "Electrical Station",
             description: "Precision calculators for your off-grid power setup.",
