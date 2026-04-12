@@ -32,8 +32,11 @@ export async function signUpAction(formData: FormData) {
 			id: userId,
 			email: result.data.email,
 			passwordHash: passwordHash,
+			name: result.data.email.split('@')[0], // Nome provisório baseado no email
 			role: "user",
 			isPro: false,
+			onboarded: false,
+			avatarUrl: null
 		});
 
 		const session = await lucia.createSession(userId, {});
