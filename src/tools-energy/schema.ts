@@ -4,7 +4,7 @@ import { vehicles } from "@/garage/schema";
 
 export const calculationRuns = pgTable("calculation_runs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   vehicleId: uuid("vehicle_id")

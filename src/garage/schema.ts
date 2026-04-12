@@ -3,7 +3,7 @@ import { users } from "@/core-platform/schema";
 
 export const garages = pgTable("garages", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -15,7 +15,7 @@ export const vehicles = pgTable("vehicles", {
   garageId: uuid("garage_id")
     .notNull()
     .references(() => garages.id, { onDelete: "cascade" }),
-  userId: uuid("user_id")
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   make: text("make").notNull(),

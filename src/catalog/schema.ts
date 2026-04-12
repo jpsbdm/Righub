@@ -27,7 +27,7 @@ export const catalogProducts = pgTable("catalog_products", {
 
 export const catalogSubmissions = pgTable("catalog_submissions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   categoryId: uuid("category_id")

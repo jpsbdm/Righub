@@ -4,7 +4,7 @@ import { vehicles } from "@/garage/schema";
 
 export const posts = pgTable("posts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   vehicleId: uuid("vehicle_id")
@@ -19,7 +19,7 @@ export const posts = pgTable("posts", {
 
 export const likes = pgTable("likes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   postId: uuid("post_id")
@@ -30,7 +30,7 @@ export const likes = pgTable("likes", {
 
 export const comments = pgTable("comments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   postId: uuid("post_id")

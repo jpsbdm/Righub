@@ -16,7 +16,7 @@ export const forumTopics = pgTable("forum_topics", {
     categoryId: uuid("category_id")
         .notNull()
         .references(() => forumCategories.id, { onDelete: "cascade" }),
-    authorId: uuid("author_id")
+    authorId: text("author_id")
         .notNull()
         .references(() => users.id, { onDelete: "cascade" }),
     title: text("title").notNull(),
@@ -35,7 +35,7 @@ export const forumReplies = pgTable("forum_replies", {
     topicId: uuid("topic_id")
         .notNull()
         .references(() => forumTopics.id, { onDelete: "cascade" }),
-    authorId: uuid("author_id")
+    authorId: text("author_id")
         .notNull()
         .references(() => users.id, { onDelete: "cascade" }),
     content: text("content").notNull(),
