@@ -56,6 +56,9 @@ export async function GET(request: NextRequest) {
 
         return redirect("/feed");
     } catch (error: any) {
+        if (error?.message === "NEXT_REDIRECT" || error?.digest?.includes("NEXT_REDIRECT")) {
+            throw error;
+        }
         console.error("Erro no Dev Login:", error);
         return new NextResponse(JSON.stringify({ 
             message: "Internal Server Error", 
