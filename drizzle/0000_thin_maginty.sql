@@ -1,11 +1,46 @@
+CREATE TABLE "catalog_categories" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" text NOT NULL,
+	"slug" text NOT NULL,
+	"icon" text,
+	"description" text,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "catalog_categories_slug_unique" UNIQUE("slug")
+);
+--> statement-breakpoint
+CREATE TABLE "catalog_products" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"category_id" uuid NOT NULL,
+	"brand" text NOT NULL,
+	"model" text NOT NULL,
+	"sku" text,
+	"image_url" text,
+	"specs" jsonb DEFAULT '{}'::jsonb NOT NULL,
+	"status" text DEFAULT 'active' NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "catalog_submissions" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"user_id" text NOT NULL,
+	"category_id" uuid NOT NULL,
+	"brand" text NOT NULL,
+	"model" text NOT NULL,
+	"specs" jsonb DEFAULT '{}'::jsonb NOT NULL,
+	"status" text DEFAULT 'pending' NOT NULL,
+	"moderation_notes" text,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "sessions" (
 	"id" text PRIMARY KEY NOT NULL,
-	"user_id" uuid NOT NULL,
+	"user_id" text NOT NULL,
 	"expires_at" timestamp with time zone NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" text PRIMARY KEY NOT NULL,
 	"email" text NOT NULL,
 	"password_hash" text,
 	"name" text,
@@ -19,9 +54,45 @@ CREATE TABLE "users" (
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
+CREATE TABLE "forum_categories" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" text NOT NULL,
+	"slug" text NOT NULL,
+	"description" text,
+	"icon" text,
+	"order" integer DEFAULT 0,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "forum_categories_slug_unique" UNIQUE("slug")
+);
+--> statement-breakpoint
+CREATE TABLE "forum_replies" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"topic_id" uuid NOT NULL,
+	"author_id" text NOT NULL,
+	"content" text NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "forum_topics" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"category_id" uuid NOT NULL,
+	"author_id" text NOT NULL,
+	"title" text NOT NULL,
+	"content" text NOT NULL,
+	"slug" text NOT NULL,
+	"is_pinned" boolean DEFAULT false,
+	"is_locked" boolean DEFAULT false,
+	"view_count" integer DEFAULT 0,
+	"reply_count" integer DEFAULT 0,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "forum_topics_slug_unique" UNIQUE("slug")
+);
+--> statement-breakpoint
 CREATE TABLE "garages" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"user_id" uuid NOT NULL,
+	"user_id" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -59,7 +130,7 @@ CREATE TABLE "vehicle_mods" (
 CREATE TABLE "vehicles" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"garage_id" uuid NOT NULL,
-	"user_id" uuid NOT NULL,
+	"user_id" text NOT NULL,
 	"make" text NOT NULL,
 	"model" text NOT NULL,
 	"year" integer NOT NULL,
@@ -69,7 +140,7 @@ CREATE TABLE "vehicles" (
 --> statement-breakpoint
 CREATE TABLE "comments" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"user_id" uuid NOT NULL,
+	"user_id" text NOT NULL,
 	"post_id" uuid NOT NULL,
 	"content" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
@@ -78,14 +149,14 @@ CREATE TABLE "comments" (
 --> statement-breakpoint
 CREATE TABLE "likes" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"user_id" uuid NOT NULL,
+	"user_id" text NOT NULL,
 	"post_id" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "posts" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"user_id" uuid NOT NULL,
+	"user_id" text NOT NULL,
 	"vehicle_id" uuid,
 	"content" text,
 	"media_urls" jsonb DEFAULT '[]'::jsonb NOT NULL,
@@ -95,42 +166,44 @@ CREATE TABLE "posts" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "catalog_categories" (
+CREATE TABLE "calculation_items" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"run_id" uuid NOT NULL,
 	"name" text NOT NULL,
-	"slug" text NOT NULL,
-	"icon" text,
-	"description" text,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "catalog_categories_slug_unique" UNIQUE("slug")
-);
---> statement-breakpoint
-CREATE TABLE "catalog_products" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"category_id" uuid NOT NULL,
-	"brand" text NOT NULL,
-	"model" text NOT NULL,
-	"sku" text,
-	"image_url" text,
-	"specs" jsonb DEFAULT '{}'::jsonb NOT NULL,
-	"status" text DEFAULT 'active' NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
-);
---> statement-breakpoint
-CREATE TABLE "catalog_submissions" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"user_id" uuid NOT NULL,
-	"category_id" uuid NOT NULL,
-	"brand" text NOT NULL,
-	"model" text NOT NULL,
-	"specs" jsonb DEFAULT '{}'::jsonb NOT NULL,
-	"status" text DEFAULT 'pending' NOT NULL,
-	"moderation_notes" text,
+	"watts" numeric(10, 2) NOT NULL,
+	"hours_per_day" numeric(4, 2) NOT NULL,
+	"duty_cycle" integer DEFAULT 100 NOT NULL,
+	"is_ac" boolean DEFAULT false NOT NULL,
+	"quantity" integer DEFAULT 1 NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "calculation_runs" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"user_id" text NOT NULL,
+	"vehicle_id" uuid,
+	"name" text NOT NULL,
+	"total_ah" numeric(10, 2) NOT NULL,
+	"total_wh" numeric(10, 2) NOT NULL,
+	"voltage" integer DEFAULT 12 NOT NULL,
+	"visibility" text DEFAULT 'private' NOT NULL,
+	"share_slug" text,
+	"rating_score" numeric(3, 1),
+	"solar_watts" integer,
+	"battery_ah" integer,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "calculation_runs_share_slug_unique" UNIQUE("share_slug")
+);
+--> statement-breakpoint
+ALTER TABLE "catalog_products" ADD CONSTRAINT "catalog_products_category_id_catalog_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."catalog_categories"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "catalog_submissions" ADD CONSTRAINT "catalog_submissions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "catalog_submissions" ADD CONSTRAINT "catalog_submissions_category_id_catalog_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."catalog_categories"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "forum_replies" ADD CONSTRAINT "forum_replies_topic_id_forum_topics_id_fk" FOREIGN KEY ("topic_id") REFERENCES "public"."forum_topics"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "forum_replies" ADD CONSTRAINT "forum_replies_author_id_users_id_fk" FOREIGN KEY ("author_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "forum_topics" ADD CONSTRAINT "forum_topics_category_id_forum_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."forum_categories"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "forum_topics" ADD CONSTRAINT "forum_topics_author_id_users_id_fk" FOREIGN KEY ("author_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "garages" ADD CONSTRAINT "garages_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "media_assets" ADD CONSTRAINT "media_assets_vehicle_id_vehicles_id_fk" FOREIGN KEY ("vehicle_id") REFERENCES "public"."vehicles"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "setup_snapshots" ADD CONSTRAINT "setup_snapshots_vehicle_id_vehicles_id_fk" FOREIGN KEY ("vehicle_id") REFERENCES "public"."vehicles"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -143,6 +216,6 @@ ALTER TABLE "likes" ADD CONSTRAINT "likes_user_id_users_id_fk" FOREIGN KEY ("use
 ALTER TABLE "likes" ADD CONSTRAINT "likes_post_id_posts_id_fk" FOREIGN KEY ("post_id") REFERENCES "public"."posts"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "posts" ADD CONSTRAINT "posts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "posts" ADD CONSTRAINT "posts_vehicle_id_vehicles_id_fk" FOREIGN KEY ("vehicle_id") REFERENCES "public"."vehicles"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "catalog_products" ADD CONSTRAINT "catalog_products_category_id_catalog_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."catalog_categories"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "catalog_submissions" ADD CONSTRAINT "catalog_submissions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "catalog_submissions" ADD CONSTRAINT "catalog_submissions_category_id_catalog_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."catalog_categories"("id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "calculation_items" ADD CONSTRAINT "calculation_items_run_id_calculation_runs_id_fk" FOREIGN KEY ("run_id") REFERENCES "public"."calculation_runs"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "calculation_runs" ADD CONSTRAINT "calculation_runs_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "calculation_runs" ADD CONSTRAINT "calculation_runs_vehicle_id_vehicles_id_fk" FOREIGN KEY ("vehicle_id") REFERENCES "public"."vehicles"("id") ON DELETE set null ON UPDATE no action;
