@@ -12,7 +12,7 @@ export async function getGarageByUserId(userId: string) {
     return garage || null;
 }
 
-export async function addVehicle(userId: string, data: { make: string; model: string; year: number }) {
+export async function addVehicle(userId: string, data: { nickname?: string; make: string; model: string; year: number }) {
     let garage = await getGarageByUserId(userId);
     if (!garage) {
         garage = await createGarage(userId);

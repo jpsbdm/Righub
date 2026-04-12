@@ -13,12 +13,13 @@ export async function addVehicleAction(formData: FormData) {
     const { user } = await lucia.validateSession(sessionId);
     if (!user) return { error: "Unauthorized" };
 
+    const nickname = formData.get("nickname") as string;
     const make = formData.get("make") as string;
     const model = formData.get("model") as string;
     const year = parseInt(formData.get("year") as string);
 
     try {
-        await addVehicle(user.id, { make, model, year });
+        await addVehicle(user.id, { nickname, make, model, year });
         revalidatePath("/garage");
         return { success: true };
     } catch (error) {

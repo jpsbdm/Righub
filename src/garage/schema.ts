@@ -18,6 +18,7 @@ export const vehicles = pgTable("vehicles", {
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  nickname: text("nickname"), // e.g. "The Beast"
   make: text("make").notNull(),
   model: text("model").notNull(),
   year: integer("year").notNull(),

@@ -76,8 +76,18 @@ export default async function VehicleDetailPage({ params }: { params: { id: stri
                             </div>
                             <div className="space-y-2">
                                 <h1 className="text-6xl font-black tracking-tighter italic uppercase leading-none">
-                                    {vehicle.year} {vehicle.make} <br />
-                                    <span className="text-primary">{vehicle.model}</span>
+                                    {vehicle.nickname ? (
+                                        <>
+                                            <span className="text-primary">"{vehicle.nickname}"</span>
+                                            <br />
+                                            <span className="text-2xl opacity-50 block mt-2">{vehicle.year} {vehicle.make} {vehicle.model}</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {vehicle.year} {vehicle.make} <br />
+                                            <span className="text-primary">{vehicle.model}</span>
+                                        </>
+                                    )}
                                 </h1>
                                 <p className="text-xl text-muted-foreground font-medium max-w-md">
                                     A technical build designed for Australian expeditions and off-grid living.

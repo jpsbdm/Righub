@@ -14,6 +14,7 @@ import { Plus } from "lucide-react";
 import { AUSTRALIAN_VEHICLES, getAllMakes, getModelsForMake } from "@/garage/lib/vehicles-data";
 
 const vehicleSchema = z.object({
+  nickname: z.string().optional(),
   make: z.string().min(1, "Make is required"),
   model: z.string().min(1, "Model is required"),
   year: z.string().refine((val) => {
@@ -42,6 +43,7 @@ export function AddVehicleDialog() {
     setError(null);
     
     const formData = new FormData();
+    formData.append("nickname", data.nickname || "");
     formData.append("make", data.make);
     formData.append("model", data.model);
     formData.append("year", data.year.toString());
@@ -66,39 +68,51 @@ export function AddVehicleDialog() {
           </Button>
         }
       />
-      <DialogContent className="sm:max-w-[425px] bg-card/95 backdrop-blur-xl border-border/50 rounded-[2rem]">
+      <DialogContent className="sm:max-w-[425px] bg-card/95 backdrop-blur-xl border-border/50 rounded-[2.5rem] p-8 shadow-2xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-black italic italic tracking-tighter">ADD NEW RIG</DialogTitle>
-          <DialogDescription>
-            Select your vehicle details to start your build journey.
+          <DialogTitle className="text-3xl font-black italic tracking-tighter uppercase leading-none">ADD NEW RIG</DialogTitle>
+          <DialogDescription className="text-muted-foreground mt-2">
+            Bring your build to life. Start by naming your rig.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pt-6">
           <div className="space-y-2">
-            <Label htmlFor="make" className="text-[10px] uppercase font-black tracking-widest text-muted-foreground mr-auto block ml-1">Make</Label>
-            <Select onValueChange={(val: string | null) => {
-              if (val) {
-                setSelectedMake(val);
-                setValue("make", val);
-                setValue("model", ""); // Reset model on make change
-              }
-            }}>
-                <SelectTrigger className="h-12 bg-muted/50 border-none rounded-xl w-full">
-                    <SelectValue placeholder="Select Brand" />
-                </SelectTrigger>
-                <SelectContent>
-                    {makes.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
-                    <SelectItem value="Other">Other...</SelectItem>
-                </SelectContent>
-            </Select>
+            <Label htmlFor="nickname" className="text-[10px] uppercase font-black tracking-widest text-muted-foreground block ml-1">Rig Nickname (Optional)</Label>
+            <Input id="nickname" placeholder="e.g. The Beast, Dusty, Bluey..." className="h-12 bg-muted/50 border-none rounded-xl font-medium focus-visible:ring-primary/20" {...register("nickname")} />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="make" className="text-[10px] uppercase font-black tracking-widest text-muted-foreground block ml-1">Make / Brand</Label>
+            {selectedMake === "Other" ? (
+                <div className="flex gap-2">
+                   <Input id="make" placeholder="Enter make (e.g. RAM, Chevy)" className="h-12 bg-muted/50 border-none rounded-xl font-medium" {...register("make")} />
+                   <Button type="button" variant="ghost" size="sm" onClick={() => setSelectedMake("")} className="h-12 rounded-xl">Reset</Button>
+                </div>
+            ) : (
+                <Select onValueChange={(val: string | null) => {
+                    if (val) {
+                      setSelectedMake(val);
+                      setValue("make", val);
+                      setValue("model", ""); // Reset model on make change
+                    }
+                  }}>
+                      <SelectTrigger className="h-12 bg-muted/50 border-none rounded-xl w-full font-medium">
+                          <SelectValue placeholder="Select Brand" />
+                      </SelectTrigger>
+                      <SelectContent>
+                          {makes.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                          <SelectItem value="Other">Other (Enter Manually)...</SelectItem>
+                      </SelectContent>
+                  </Select>
+            )}
             {errors.make && <p className="text-xs text-destructive">{errors.make.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="model" className="text-[10px] uppercase font-black tracking-widest text-muted-foreground mr-auto block ml-1">Model</Label>
+            <Label htmlFor="model" className="text-[10px] uppercase font-black tracking-widest text-muted-foreground block ml-1">Model</Label>
             {selectedMake && selectedMake !== "Other" ? (
                 <Select onValueChange={(val: string | null) => { if (val) setValue("model", val) }}>
-                    <SelectTrigger className="h-12 bg-muted/50 border-none rounded-xl w-full">
+                    <SelectTrigger className="h-12 bg-muted/50 border-none rounded-xl w-full font-medium">
                         <SelectValue placeholder="Select Model" />
                     </SelectTrigger>
                     <SelectContent>
@@ -106,22 +120,22 @@ export function AddVehicleDialog() {
                     </SelectContent>
                 </Select>
             ) : (
-                <Input id="model" placeholder="Enter model name" className="h-12 bg-muted/50 border-none rounded-xl" {...register("model")} />
+                <Input id="model" placeholder="Enter model name" className="h-12 bg-muted/50 border-none rounded-xl font-medium" {...register("model")} />
             )}
             {errors.model && <p className="text-xs text-destructive">{errors.model.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="year" className="text-[10px] uppercase font-black tracking-widest text-muted-foreground mr-auto block ml-1">Year</Label>
-            <Input id="year" type="number" placeholder="e.g. 2024" className="h-12 bg-muted/50 border-none rounded-xl" {...register("year")} />
+            <Label htmlFor="year" className="text-[10px] uppercase font-black tracking-widest text-muted-foreground block ml-1">Year</Label>
+            <Input id="year" type="number" placeholder="e.g. 2024" className="h-12 bg-muted/50 border-none rounded-xl font-medium" {...register("year")} />
             {errors.year && <p className="text-xs text-destructive">{errors.year.message}</p>}
           </div>
 
           {error && <p className="text-sm font-medium text-destructive bg-destructive/10 p-3 rounded-xl">{error}</p>}
           
-          <DialogFooter>
-            <Button type="submit" disabled={loading} className="w-full h-12 rounded-xl font-bold text-lg">
-              {loading ? "Adding..." : "Save Rig"}
+          <DialogFooter className="pt-4">
+            <Button type="submit" disabled={loading} className="w-full h-14 rounded-2xl font-black italic tracking-tighter text-xl shadow-xl shadow-primary/20">
+              {loading ? "SAVING..." : "SAVE MY RIG"}
             </Button>
           </DialogFooter>
         </form>
