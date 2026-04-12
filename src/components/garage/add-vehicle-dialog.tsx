@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { addVehicleAction } from "@/core-platform/actions/garage.actions";
 import { Plus } from "lucide-react";
+import { AUSTRALIAN_VEHICLES, getAllMakes, getModelsForMake } from "@/garage/lib/vehicles-data";
 
 const vehicleSchema = z.object({
   make: z.string().min(1, "Make is required"),
@@ -27,10 +28,14 @@ export function AddVehicleDialog() {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [selectedMake, setSelectedMake] = useState<string>("");
 
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<VehicleValues>({
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<VehicleValues>({
     resolver: zodResolver(vehicleSchema),
   });
+
+  const makes = getAllMakes();
+  const models = selectedMake ? getModelsForMake(selectedMake) : [];
 
   async function onSubmit(data: VehicleValues) {
     setLoading(true);
@@ -49,44 +54,74 @@ export function AddVehicleDialog() {
     } else {
       setOpen(false);
       setLoading(false);
-      // Success triggers revalidation via server action
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={
-        <Button className="font-semibold shadow-lg shadow-primary/20">
-          <Plus className="mr-2 h-4 w-4" /> Add Vehicle
-        </Button>
-      } />
-      <DialogContent className="sm:max-w-[425px] bg-card/95 backdrop-blur-xl border-border/50">
+      <DialogTrigger
+        render={
+          <Button className="font-semibold shadow-lg shadow-primary/20 rounded-full px-6">
+            <Plus className="mr-2 h-4 w-4" /> Add Vehicle
+          </Button>
+        }
+      />
+      <DialogContent className="sm:max-w-[425px] bg-card/95 backdrop-blur-xl border-border/50 rounded-[2rem]">
         <DialogHeader>
-          <DialogTitle>Add New Vehicle</DialogTitle>
+          <DialogTitle className="text-2xl font-black italic italic tracking-tighter">ADD NEW RIG</DialogTitle>
           <DialogDescription>
-            Enter the details of your rig to start tracking builds and calculations.
+            Select your vehicle details to start your build journey.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-4">
           <div className="space-y-2">
-            <Label htmlFor="make">Make</Label>
-            <Input id="make" placeholder="Toyota, Ford, Jeep..." {...register("make")} />
+            <Label htmlFor="make" className="text-[10px] uppercase font-black tracking-widest text-muted-foreground mr-auto block ml-1">Make</Label>
+            <Select onValueChange={(val: string | null) => {
+              if (val) {
+                setSelectedMake(val);
+                setValue("make", val);
+                setValue("model", ""); // Reset model on make change
+              }
+            }}>
+                <SelectTrigger className="h-12 bg-muted/50 border-none rounded-xl w-full">
+                    <SelectValue placeholder="Select Brand" />
+                </SelectTrigger>
+                <SelectContent>
+                    {makes.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                    <SelectItem value="Other">Other...</SelectItem>
+                </SelectContent>
+            </Select>
             {errors.make && <p className="text-xs text-destructive">{errors.make.message}</p>}
           </div>
+
           <div className="space-y-2">
-            <Label htmlFor="model">Model</Label>
-            <Input id="model" placeholder="Hilux, F-150, Wrangler..." {...register("model")} />
+            <Label htmlFor="model" className="text-[10px] uppercase font-black tracking-widest text-muted-foreground mr-auto block ml-1">Model</Label>
+            {selectedMake && selectedMake !== "Other" ? (
+                <Select onValueChange={(val: string | null) => { if (val) setValue("model", val) }}>
+                    <SelectTrigger className="h-12 bg-muted/50 border-none rounded-xl w-full">
+                        <SelectValue placeholder="Select Model" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {models.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                    </SelectContent>
+                </Select>
+            ) : (
+                <Input id="model" placeholder="Enter model name" className="h-12 bg-muted/50 border-none rounded-xl" {...register("model")} />
+            )}
             {errors.model && <p className="text-xs text-destructive">{errors.model.message}</p>}
           </div>
+
           <div className="space-y-2">
-            <Label htmlFor="year">Year</Label>
-            <Input id="year" type="number" placeholder="2024" {...register("year")} />
+            <Label htmlFor="year" className="text-[10px] uppercase font-black tracking-widest text-muted-foreground mr-auto block ml-1">Year</Label>
+            <Input id="year" type="number" placeholder="e.g. 2024" className="h-12 bg-muted/50 border-none rounded-xl" {...register("year")} />
             {errors.year && <p className="text-xs text-destructive">{errors.year.message}</p>}
           </div>
-          {error && <p className="text-sm font-medium text-destructive">{error}</p>}
+
+          {error && <p className="text-sm font-medium text-destructive bg-destructive/10 p-3 rounded-xl">{error}</p>}
+          
           <DialogFooter>
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? "Adding..." : "Save Vehicle"}
+            <Button type="submit" disabled={loading} className="w-full h-12 rounded-xl font-bold text-lg">
+              {loading ? "Adding..." : "Save Rig"}
             </Button>
           </DialogFooter>
         </form>

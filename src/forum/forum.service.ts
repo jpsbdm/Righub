@@ -47,12 +47,12 @@ export const forumService = {
     // Seed Data (for development)
     async seedCategories() {
         const categories = [
-            { name: "Elétrica & Solar", slug: "eletrica-solar", description: "Baterias, painéis, inversores e dimensionamento.", icon: "zap", order: 1 },
-            { name: "Mecânica 4WD", slug: "mecanica-4wd", description: "Suspensão, pneus, motores e manutenção off-road.", icon: "settings", order: 2 },
-            { name: "Vida a Bordo & Camping", slug: "vida-a-bordo", description: "Cozinha, banho, isolamento e organização.", icon: "tent", order: 3 },
-            { name: "Caravanismo & Trailers", slug: "caravanismo", description: "Reboques, trailers e motorhomes.", icon: "truck", order: 4 },
-            { name: "Roteiros & Destinos", slug: "roteiros", description: "Relatos de viagens e dicas de lugares.", icon: "map", order: 5 },
-            { name: "Classificados", slug: "classificados", description: "Compra e venda de acessórios e veículos.", icon: "shopping-cart", order: 6 },
+            { name: "Electrical & Solar", slug: "electrical-solar", description: "Batteries, panels, inverters and system sizing.", icon: "zap", order: 1 },
+            { name: "Mechanical & 4WD", slug: "mechanical-4wd", description: "Suspension, tires, engines and off-road maintenance.", icon: "settings", order: 2 },
+            { name: "Builds & Layouts", slug: "builds-layouts", description: "Kitchen setups, insulation, storage and van life design.", icon: "tent", order: 3 },
+            { name: "Caravans & Campers", slug: "caravans-campers", description: "Off-road trailers, hybrids and motorhomes.", icon: "truck", order: 4 },
+            { name: "Tracks & Trips", slug: "tracks-trips", description: "Expedition reports and campsite recommendations.", icon: "map", order: 5 },
+            { name: "Classifieds", slug: "classifieds", description: "Buy and sell 4WD accessories and vehicles.", icon: "shopping-cart", order: 6 },
         ];
 
         for (const cat of categories) {

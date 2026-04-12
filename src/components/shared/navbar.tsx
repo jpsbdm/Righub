@@ -23,10 +23,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const NAV_ITEMS = [
     { label: "Feed", href: "/feed", icon: MessageSquare },
-    { label: "Garagem", href: "/garage", icon: Car },
-    { label: "Catálogo", href: "/catalog", icon: BookOpen },
-    { label: "Fórum", href: "/forum", icon: LayoutDashboard },
-    { label: "Ferramentas", href: "/tools", icon: Zap },
+    { label: "Garage", href: "/garage", icon: Car },
+    { label: "Catalog", href: "/catalog", icon: BookOpen },
+    { label: "Forum", href: "/forum", icon: LayoutDashboard },
+    { label: "Tools", href: "/tools", icon: Zap },
 ];
 
 export function Navbar({ user }: { user: any }) {
@@ -110,23 +110,23 @@ export function Navbar({ user }: { user: any }) {
                             {isUserMenuOpen && (
                                 <div className="absolute top-10 right-0 w-56 p-2 bg-background border border-border shadow-2xl rounded-2xl animate-in fade-in zoom-in duration-200">
                                     <div className="px-3 py-2 border-b border-border/50 mb-1">
-                                        <p className="text-xs font-black uppercase text-muted-foreground tracking-widest mb-0.5">Logado como</p>
-                                        <p className="text-sm font-bold truncate">{user.name || "Membro RigHub"}</p>
+                                        <p className="text-xs font-black uppercase text-muted-foreground tracking-widest mb-0.5">Logged in as</p>
+                                        <p className="text-sm font-bold truncate">{user.name || "RigHub Member"}</p>
                                     </div>
                                     <div className="space-y-0.5">
                                         <Link href={`/user/${user.id}`} onClick={() => setIsUserMenuOpen(false)}>
                                             <Button variant="ghost" className="w-full justify-start text-xs rounded-xl h-10 font-medium">
-                                                <User className="mr-2 h-4 w-4" /> Ver Perfil
+                                                <User className="mr-2 h-4 w-4" /> View Profile
                                             </Button>
                                         </Link>
                                         <Link href="/garage" onClick={() => setIsUserMenuOpen(false)}>
                                             <Button variant="ghost" className="w-full justify-start text-xs rounded-xl h-10 font-medium">
-                                                <Car className="mr-2 h-4 w-4" /> Minha Garagem
+                                                <Car className="mr-2 h-4 w-4" /> My Garage
                                             </Button>
                                         </Link>
                                         <Link href="/settings" onClick={() => setIsUserMenuOpen(false)}>
                                             <Button variant="ghost" className="w-full justify-start text-xs rounded-xl h-10 font-medium">
-                                                <Settings className="mr-2 h-4 w-4" /> Configurações
+                                                <Settings className="mr-2 h-4 w-4" /> Settings
                                             </Button>
                                         </Link>
                                         <div className="h-px bg-border/50 my-1 mx-2" />
@@ -135,7 +135,7 @@ export function Navbar({ user }: { user: any }) {
                                             className="w-full justify-start text-xs rounded-xl h-10 font-bold text-destructive hover:bg-destructive/10 hover:text-destructive"
                                             onClick={handleLogout}
                                         >
-                                            <LogOut className="mr-2 h-4 w-4" /> Sair da Conta
+                                            <LogOut className="mr-2 h-4 w-4" /> Log out
                                         </Button>
                                     </div>
                                 </div>
@@ -143,7 +143,7 @@ export function Navbar({ user }: { user: any }) {
                         </div>
                     ) : (
                         <Link href="/login">
-                            <Button size="sm" className="rounded-full font-bold px-6">Entrar</Button>
+                            <Button size="sm" className="rounded-full font-bold px-6">Login</Button>
                         </Link>
                     )}
 

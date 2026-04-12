@@ -13,6 +13,7 @@ import {
     ChevronRight,
     Users
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 interface Category {
@@ -37,33 +38,44 @@ export default function ForumCategoryList({ categories }: { categories: Category
     };
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="space-y-4">
             {categories.map((category, idx) => (
                 <motion.div
                     key={category.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.1 }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
                 >
                     <Link href={`/forum/c/${category.slug}`}>
-                        <Card className="hover:border-primary/50 hover:bg-primary/5 transition-all group cursor-pointer h-full border-border/50 bg-card/40 backdrop-blur-sm overflow-hidden relative">
-                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <Users className="h-16 w-16" />
-                            </div>
-                            <CardHeader className="flex flex-row items-center gap-4">
-                                <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <div className="flex items-center justify-between p-6 rounded-[1.5rem] bg-card/40 border border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all group">
+                            <div className="flex items-center gap-6">
+                                <div className="h-14 w-14 rounded-2xl bg-muted/50 flex items-center justify-center text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-all shadow-inner">
                                     {getIcon(category.icon)}
                                 </div>
-                                <div>
-                                    <CardTitle className="text-lg group-hover:text-primary transition-colors">{category.name}</CardTitle>
-                                    <CardDescription className="line-clamp-1">{category.description}</CardDescription>
+                                <div className="space-y-1">
+                                    <h3 className="text-xl font-black italic uppercase tracking-tighter group-hover:text-primary transition-colors">
+                                        {category.name}
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground font-medium max-w-md">
+                                        {category.description}
+                                    </p>
                                 </div>
-                            </CardHeader>
-                            <CardContent className="flex justify-between items-center text-xs text-muted-foreground">
-                                <span className="font-medium">Explorar discussões</span>
-                                <ChevronRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
-                            </CardContent>
-                        </Card>
+                            </div>
+                            
+                            <div className="hidden md:flex items-center gap-12">
+                                <div className="text-center">
+                                    <p className="text-lg font-black tracking-tighter leading-none italic uppercase">124</p>
+                                    <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Topics</p>
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-lg font-black tracking-tighter leading-none italic uppercase">2.1k</p>
+                                    <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Posts</p>
+                                </div>
+                                <Button variant="ghost" size="icon" className="rounded-xl h-10 w-10 text-muted-foreground group-hover:text-primary group-hover:bg-primary/10 transition-all">
+                                    <ChevronRight className="h-5 w-5" />
+                                </Button>
+                            </div>
+                        </div>
                     </Link>
                 </motion.div>
             ))}

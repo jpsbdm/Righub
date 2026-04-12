@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "Advanced energy diagnostics, shared vehicle setups, and technical community for off-grid travelers.",
 };
 
+import { ThemeProvider } from "@/components/theme-provider";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -27,11 +29,18 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${inter.variable} antialiased`} suppressHydrationWarning>
-      <body className="min-h-screen bg-background font-sans text-foreground pt-16">
-        <CSPostHogProvider>
-          <Navbar user={user} />
-          {children}
-        </CSPostHogProvider>
+      <body className="min-h-screen bg-background font-sans text-foreground">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <CSPostHogProvider>
+            <Navbar user={user} />
+            <main className="pt-16">{children}</main>
+          </CSPostHogProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
