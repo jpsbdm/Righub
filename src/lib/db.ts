@@ -27,9 +27,17 @@ const schema = {
  */
 
 function createDb() {
-  const connectionString = process.env.DATABASE_URL!;
+  const connectionString = process.env.DATABASE_URL;
 
   if (!connectionString) {
+    // Permitir que o build da Vercel complete sem estourar erro fatal na inicialização.
+    // O erro será lançado no momento do uso se a variável ainda estiver faltando no runtime.
+    if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+        console.warn('⚠️ DATABASE_URL is missing. Database access will fail at runtime.');
+        return new Proxy({}, { 
+            get: () => () => { throw new Error('DATABASE_URL is missing. Please set it in Vercel Settings > Environment Variables.'); } 
+        }) as any;
+    }
     throw new Error('DATABASE_URL is not defined in .env');
   }
 
