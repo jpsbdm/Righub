@@ -64,7 +64,7 @@ export function CreatePostForm({ vehicles = [] }: { vehicles?: any[] }) {
         <Card className="bg-card/40 backdrop-blur-md border-primary/20 shadow-2xl overflow-hidden mb-8">
             <CardContent className="p-4 space-y-4">
                 <Textarea 
-                    placeholder="O que tem de novo na sua rig?" 
+                    placeholder="What's new with your rig?" 
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     className="border-none bg-transparent focus-visible:ring-0 text-lg resize-none p-0 min-h-[100px]"
@@ -94,7 +94,7 @@ export function CreatePostForm({ vehicles = [] }: { vehicles?: any[] }) {
                             className="text-muted-foreground hover:text-primary h-8 px-2"
                             onClick={() => setIsAddingImage(!isAddingImage)}
                         >
-                            <ImageIcon className="h-4 w-4 mr-2" /> Foto
+                            <ImageIcon className="h-4 w-4 mr-2" /> Photo
                         </Button>
                         <Button 
                             variant="ghost" 
@@ -102,17 +102,17 @@ export function CreatePostForm({ vehicles = [] }: { vehicles?: any[] }) {
                             className={`h-8 px-2 transition-colors ${youtubeUrl ? 'text-accent' : 'text-muted-foreground hover:text-accent'}`}
                             onClick={() => setYoutubeUrl(youtubeUrl ? "" : " ")}
                         >
-                            <Video className="h-4 w-4 mr-2" /> Vídeo
+                            <Video className="h-4 w-4 mr-2" /> Video
                         </Button>
                         <Select value={selectedVehicleId} onValueChange={(val) => setSelectedVehicleId(val || undefined)}>
                             <SelectTrigger className="h-8 border-none bg-transparent hover:bg-primary/5 text-muted-foreground gap-2 w-auto">
                                 <Car className="h-4 w-4" />
                                 <span className="text-xs truncate max-w-[100px]">
-                                    {selectedVehicleId ? "Build Anexada" : "Anexar Build"}
+                                    {selectedVehicleId ? "Attached Build" : "Attach Build"}
                                 </span>
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="none">Nenhuma</SelectItem>
+                                <SelectItem value="none">None</SelectItem>
                                 {vehicles.map((v) => (
                                     <SelectItem key={v.id} value={v.id}>
                                         {v.year} {v.make} {v.model}
@@ -126,16 +126,16 @@ export function CreatePostForm({ vehicles = [] }: { vehicles?: any[] }) {
                         size="sm" 
                         onClick={handleSubmit} 
                         disabled={isPending || (!content && mediaUrls.length === 0)}
-                        className="rounded-full px-6 shadow-lg shadow-primary/20"
+                        className="rounded-full px-6 shadow-lg shadow-primary/20 cursor-pointer"
                     >
-                        {isPending ? "Postando..." : <><Send className="h-4 w-4 mr-2" /> Postar</>}
+                        {isPending ? "Posting..." : <><Send className="h-4 w-4 mr-2" /> Post</>}
                     </Button>
                 </div>
 
                 {isAddingImage && (
                     <div className="flex gap-2 animate-in slide-in-from-top-2">
                         <Input 
-                            placeholder="URL da imagem (Simulação R2)" 
+                            placeholder="Image URL (R2 Simulation)" 
                             value={imageUrlInput}
                             onChange={(e) => setImageUrlInput(e.target.value)}
                             className="h-8 text-xs"

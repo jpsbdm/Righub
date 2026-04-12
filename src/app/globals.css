@@ -104,6 +104,14 @@
   button, [role="button"], .cursor-pointer {
     cursor: pointer !important;
   }
+  
+  /* System Z-Index Hierarchy */
+  header {
+    z-index: 40 !important;
+  }
+  [role="dialog"], .backdrop-blur-xl {
+    z-index: 50 !important;
+  }
 }
 
 @layer utilities {

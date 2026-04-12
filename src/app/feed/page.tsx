@@ -34,7 +34,7 @@ export default async function FeedPage() {
                     {/* Left Sidebar: Navigation (Desktop) */}
                     <div className="hidden lg:flex flex-col gap-4 sticky top-10 h-fit">
                         <div className="p-4 rounded-xl bg-card/40 border border-border/50">
-                            <h2 className="text-xs font-black uppercase text-muted-foreground tracking-widest mb-4">Explorar</h2>
+                            <h2 className="text-xs font-black uppercase text-muted-foreground tracking-widest mb-4">Explore</h2>
                             <nav className="space-y-1">
                                 <Link href="/feed" className="block">
                                     <Button variant="ghost" className="w-full justify-start text-primary font-bold bg-primary/5">
@@ -43,7 +43,7 @@ export default async function FeedPage() {
                                 </Link>
                                 <Link href="/forum" className="block">
                                     <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground">
-                                        <Navigation className="mr-2 h-4 w-4" /> Expedições
+                                        <Navigation className="mr-2 h-4 w-4" /> Expeditions
                                     </Button>
                                 </Link>
                                 <Link href="/catalog" className="block">
@@ -55,9 +55,9 @@ export default async function FeedPage() {
                         </div>
 
                         <div className="p-4 rounded-xl bg-card/40 border border-border/50">
-                            <h2 className="text-xs font-black uppercase text-muted-foreground tracking-widest mb-4">Filtros</h2>
+                            <h2 className="text-xs font-black uppercase text-muted-foreground tracking-widest mb-4">Filters</h2>
                             <Button variant="outline" size="sm" className="w-full justify-between h-9 text-xs">
-                                <span className="flex items-center"><Filter className="mr-2 h-3 w-3" /> Categorias</span>
+                                <span className="flex items-center"><Filter className="mr-2 h-3 w-3" /> Categories</span>
                                 <span className="text-[10px] bg-muted px-1.5 rounded">All</span>
                             </Button>
                         </div>
@@ -71,8 +71,8 @@ export default async function FeedPage() {
                             {posts.length === 0 ? (
                                 <div className="text-center py-20 border-2 border-dashed rounded-3xl text-muted-foreground">
                                     <Users className="h-12 w-12 mx-auto mb-4 opacity-20" />
-                                    <p className="text-lg font-medium">O mural está vazio.</p>
-                                    <p className="text-sm">Seja o primeiro a compartilhar sua jornada!</p>
+                                    <p className="text-lg font-medium">The feed is empty.</p>
+                                    <p className="text-sm">Be the first to share your journey!</p>
                                 </div>
                             ) : (
                                 posts.map((post) => (
@@ -84,24 +84,24 @@ export default async function FeedPage() {
 
                     {/* Right Sidebar: Active Builds / Stats */}
                     <div className="hidden lg:flex flex-col gap-6 sticky top-10 h-fit">
-                        <CardWrapper title="Builds em Destaque">
+                        <CardWrapper title="Featured Builds">
                              <div className="space-y-4">
                                  {/* Mock trending builds */}
-                                 <BuildMiniCard name="Toyota Hilux GR" owner="Carlos Expedições" rating={4.9} />
+                                 <BuildMiniCard name="Toyota Hilux GR" owner="Expedition King" rating={4.9} />
                                  <BuildMiniCard name="Defender 110" owner="Joana Overlander" rating={4.8} />
                              </div>
                         </CardWrapper>
 
-                        <div className="p-6 rounded-3xl bg-primary shadow-2xl shadow-primary/20 text-primary-foreground relative overflow-hidden group">
+                        <div className="p-5 rounded-2xl bg-primary shadow-xl shadow-primary/20 text-primary-foreground relative overflow-hidden group">
                             <div className="relative z-10">
-                                <h3 className="text-xl font-black italic mb-2 tracking-tighter">PRO RIGS</h3>
-                                <p className="text-sm opacity-90 leading-snug mb-4">Tenha acesso a specs detalhadas e chats com instaladores.</p>
+                                <h3 className="text-lg font-black italic mb-1 tracking-tighter">PRO RIGS</h3>
+                                <p className="text-[11px] opacity-90 leading-snug mb-3">Unlock technical specs and chat with certified installers.</p>
                                 <Link href="/pricing" className="block w-full">
-                                    <Button variant="secondary" size="sm" className="w-full rounded-full font-bold">Ver Planos</Button>
+                                    <Button variant="secondary" size="sm" className="w-full h-8 text-[11px] rounded-full font-bold">View Plans</Button>
                                 </Link>
                             </div>
-                            <div className="absolute -bottom-6 -right-6 opacity-20 transform group-hover:scale-110 transition-transform">
-                                <LayoutDashboard className="h-32 w-32" />
+                            <div className="absolute -bottom-4 -right-4 opacity-10 transform group-hover:scale-110 transition-transform">
+                                <LayoutDashboard className="h-24 w-24" />
                             </div>
                         </div>
                     </div>

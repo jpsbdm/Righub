@@ -30,8 +30,8 @@ export default async function GaragePage() {
                 <Badge variant="outline" className="rounded-full px-4 border-primary/20 text-primary font-bold tracking-widest text-[10px] uppercase">
                     Fleet Management
                 </Badge>
-                <h1 className="text-5xl font-black tracking-tighter italic">MINHA GARAGEM</h1>
-                <p className="text-muted-foreground text-lg max-w-md">Gerencie seus veículos, acompanhe modificações e dimensione a energia de cada rig.</p>
+                <h1 className="text-5xl font-black tracking-tighter italic">MY GARAGE</h1>
+                <p className="text-muted-foreground text-lg max-w-md">Manage your rigs, track modifications, and size your energy setup for every setup.</p>
               </div>
               <AddVehicleDialog />
            </div>
@@ -44,9 +44,9 @@ export default async function GaragePage() {
             <div className="h-20 w-20 rounded-3xl bg-primary/10 flex items-center justify-center mb-6">
               <Car className="h-10 w-10 text-primary" />
             </div>
-            <h3 className="text-2xl font-black italic tracking-tight">GARAGEM VAZIA</h3>
+            <h3 className="text-2xl font-black italic tracking-tight">EMPTY GARAGE</h3>
             <p className="text-muted-foreground mt-2 text-center max-w-xs text-sm">
-              Você ainda não cadastrou nenhum veículo. Comece adicionando sua rig principal.
+              You haven't added any vehicles yet. Start by adding your main rig.
             </p>
             <div className="mt-8">
                 <AddVehicleDialog />
@@ -55,15 +55,15 @@ export default async function GaragePage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {userVehicles.map((vehicle: any) => (
-              <Link key={vehicle.id} href={`/garage/${vehicle.id}`} className="group block">
-                <Card className="h-full border-border/50 bg-card/40 backdrop-blur-xl hover:border-primary/50 hover:bg-primary/5 transition-all overflow-hidden relative border-2 rounded-[2rem]">
+              <Link key={vehicle.id} href={`/garage/${vehicle.id}`} className="group block cursor-pointer">
+                <Card className="h-full border-border/50 bg-card/40 backdrop-blur-xl hover:border-primary/50 hover:bg-primary/5 transition-all overflow-hidden relative border-2 rounded-[2rem] cursor-pointer">
                   <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-20 transition-opacity">
                     <Car className="h-20 w-20" />
                   </div>
                   <CardHeader className="pb-4">
                     <div className="flex justify-between items-start mb-2">
                       <span className="text-xs font-black uppercase tracking-widest text-primary/60">{vehicle.make}</span>
-                      <Badge className="bg-primary/10 text-primary border-none text-[9px] font-black uppercase">RIG ATIVA</Badge>
+                      <Badge className="bg-primary/10 text-primary border-none text-[9px] font-black uppercase">ACTIVE RIG</Badge>
                     </div>
                     <CardTitle className="text-2xl font-black italic tracking-tighter group-hover:text-primary transition-colors">
                         {vehicle.year} {vehicle.model}
@@ -75,11 +75,11 @@ export default async function GaragePage() {
                             <span className="text-[9px] font-black uppercase text-muted-foreground flex items-center gap-1">
                                 <Gauge className="h-3 w-3" /> Status
                             </span>
-                            <span className="text-xs font-bold">Em Montagem</span>
+                            <span className="text-xs font-bold">Under Construction</span>
                         </div>
                         <div className="bg-background/40 p-3 rounded-2xl border border-border/50 flex flex-col gap-1">
                             <span className="text-[9px] font-black uppercase text-muted-foreground flex items-center gap-1">
-                                <Zap className="h-3 w-3" /> Energia
+                                <Zap className="h-3 w-3" /> Energy
                             </span>
                             <span className="text-xs font-bold text-yellow-500">200Ah LiFePO4</span>
                         </div>
@@ -92,7 +92,7 @@ export default async function GaragePage() {
                             <div className="h-6 w-6 rounded-full bg-muted/20 border border-background flex items-center justify-center text-[8px] font-bold">+3</div>
                         </div>
                         <Button variant="ghost" size="sm" className="h-8 rounded-full text-xs font-bold group-hover:bg-primary group-hover:text-primary-foreground">
-                            Gerenciar <ChevronRight className="ml-1 h-3 w-3" />
+                            Manage <ChevronRight className="ml-1 h-3 w-3" />
                         </Button>
                     </div>
                   </CardContent>
