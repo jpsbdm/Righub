@@ -46,10 +46,13 @@ export async function signUpAction(formData: FormData) {
 		return { success: true };
 	} catch (e: any) {
 		console.error("Erro no cadastro:", e);
-		// PostgreSQL unique constraint violation code
-		if (e?.code === "23505") {
-			return { error: "Email already exists" };
+		
+		const errorMessage = e?.message?.toLowerCase() || "";
+		// PostgreSQL unique constraint violation code (23505) or common error messages
+		if (e?.code === "23505" || errorMessage.includes("already exists") || errorMessage.includes("unique constraint")) {
+			return { error: "Este e-mail já está cadastrado. Tente fazer login." };
 		}
+		
 		return { error: `Erro técnico: ${e?.message || "Erro desconhecido"}` };
 	}
 }
