@@ -9,22 +9,27 @@ const inter = Inter({
 
 import { CSPostHogProvider } from "@/lib/posthog";
 import { Navbar } from "@/components/shared/navbar";
+import { lucia } from "@/core-platform/lib/auth";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "RigHub | Energy Intelligence & Off-Grid Community",
   description: "Advanced energy diagnostics, shared vehicle setups, and technical community for off-grid travelers.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const sessionId = (await cookies()).get(lucia.sessionCookieName)?.value ?? null;
+  const { user } = sessionId ? await lucia.validateSession(sessionId) : { user: null };
+
   return (
     <html lang="en" className={`${inter.variable} antialiased`} suppressHydrationWarning>
       <body className="min-h-screen bg-background font-sans text-foreground pt-16">
         <CSPostHogProvider>
-          <Navbar />
+          <Navbar user={user} />
           {children}
         </CSPostHogProvider>
       </body>

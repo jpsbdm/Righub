@@ -5,7 +5,13 @@ import { MessageSquare, TrendingUp, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export default async function ForumPage() {
-    const categories = await forumService.getCategories();
+    let categories = await forumService.getCategories();
+
+    // Auto-seed if empty (new environments)
+    if (categories.length === 0) {
+        await forumService.seedCategories();
+        categories = await forumService.getCategories();
+    }
 
     return (
         <div className="min-h-screen bg-background pb-20">

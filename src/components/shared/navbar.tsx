@@ -12,25 +12,39 @@ import {
     LogOut,
     Menu,
     X,
-    User
+    User,
+    ChevronDown
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { logoutAction } from "@/core-platform/actions/auth.actions";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const NAV_ITEMS = [
     { label: "Feed", href: "/feed", icon: MessageSquare },
     { label: "Garagem", href: "/garage", icon: Car },
     { label: "Catálogo", href: "/catalog", icon: BookOpen },
     { label: "Fórum", href: "/forum", icon: LayoutDashboard },
-    { label: "Ferramentas", href: "/tools/load-calculator", icon: Zap },
+    { label: "Ferramentas", href: "/tools", icon: Zap },
 ];
 
-export function Navbar() {
+export function Navbar({ user }: { user: any }) {
     const pathname = usePathname();
     const router = useRouter();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+    const userMenuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+                setIsUserMenuOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     const handleLogout = async () => {
         await logoutAction();
@@ -61,10 +75,10 @@ export function Navbar() {
                                     variant="ghost" 
                                     size="sm"
                                     className={cn(
-                                        "h-9 px-4 rounded-full font-medium transition-all",
+                                        "h-9 px-4 rounded-full font-medium transition-all text-xs",
                                         isActive 
-                                            ? "bg-primary/10 text-primary hover:bg-primary/15" 
-                                            : "text-muted-foreground hover:text-foreground"
+                                            ? "bg-primary/10 text-primary hover:bg-primary/15 font-bold" 
+                                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
                                     )}
                                 >
                                     <Icon className={cn("mr-2 h-4 w-4", isActive && "animate-pulse")} />
@@ -76,23 +90,62 @@ export function Navbar() {
                 </nav>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2">
-                    <div className="h-8 w-[1px] bg-border/50 mx-2 hidden md:block" />
-                    
-                    <Link href="/garage">
-                         <Button variant="ghost" size="icon" className="rounded-full md:hidden">
-                            <User className="h-5 w-5" />
-                        </Button>
-                    </Link>
+                <div className="flex items-center gap-3">
+                    {user ? (
+                        <div className="relative" ref={userMenuRef}>
+                            <button 
+                                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                                className="flex items-center gap-2 p-1 pl-1 pr-2 rounded-full hover:bg-muted transition-colors border border-border/20"
+                            >
+                                <Avatar className="h-7 w-7 border border-primary/20">
+                                    <AvatarImage src={user.avatarUrl} />
+                                    <AvatarFallback className="bg-primary/10 text-[10px] font-bold text-primary italic">
+                                        {user.name?.substring(0, 2).toUpperCase() || "RH"}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <ChevronDown className={cn("h-3 w-3 text-muted-foreground transition-transform", isUserMenuOpen && "rotate-180")} />
+                            </button>
 
-                    <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="rounded-full hidden md:flex text-muted-foreground hover:text-destructive transition-colors"
-                        onClick={handleLogout}
-                    >
-                        <LogOut className="h-4 w-4" />
-                    </Button>
+                            {/* User Dropdown */}
+                            {isUserMenuOpen && (
+                                <div className="absolute top-10 right-0 w-56 p-2 bg-background border border-border shadow-2xl rounded-2xl animate-in fade-in zoom-in duration-200">
+                                    <div className="px-3 py-2 border-b border-border/50 mb-1">
+                                        <p className="text-xs font-black uppercase text-muted-foreground tracking-widest mb-0.5">Logado como</p>
+                                        <p className="text-sm font-bold truncate">{user.name || "Membro RigHub"}</p>
+                                    </div>
+                                    <div className="space-y-0.5">
+                                        <Link href={`/user/${user.id}`} onClick={() => setIsUserMenuOpen(false)}>
+                                            <Button variant="ghost" className="w-full justify-start text-xs rounded-xl h-10 font-medium">
+                                                <User className="mr-2 h-4 w-4" /> Ver Perfil
+                                            </Button>
+                                        </Link>
+                                        <Link href="/garage" onClick={() => setIsUserMenuOpen(false)}>
+                                            <Button variant="ghost" className="w-full justify-start text-xs rounded-xl h-10 font-medium">
+                                                <Car className="mr-2 h-4 w-4" /> Minha Garagem
+                                            </Button>
+                                        </Link>
+                                        <Link href="/settings" onClick={() => setIsUserMenuOpen(false)}>
+                                            <Button variant="ghost" className="w-full justify-start text-xs rounded-xl h-10 font-medium">
+                                                <Settings className="mr-2 h-4 w-4" /> Configurações
+                                            </Button>
+                                        </Link>
+                                        <div className="h-px bg-border/50 my-1 mx-2" />
+                                        <Button 
+                                            variant="ghost" 
+                                            className="w-full justify-start text-xs rounded-xl h-10 font-bold text-destructive hover:bg-destructive/10 hover:text-destructive"
+                                            onClick={handleLogout}
+                                        >
+                                            <LogOut className="mr-2 h-4 w-4" /> Sair da Conta
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <Link href="/login">
+                            <Button size="sm" className="rounded-full font-bold px-6">Entrar</Button>
+                        </Link>
+                    )}
 
                     <Button 
                         variant="ghost" 
@@ -129,14 +182,25 @@ export function Navbar() {
                                 </Link>
                             );
                         })}
-                        <div className="h-[1px] bg-border/50 my-2" />
-                        <button 
-                            onClick={handleLogout}
-                            className="flex items-center gap-3 p-4 rounded-2xl font-bold text-destructive hover:bg-destructive/10 transition-colors w-full text-left"
-                        >
-                            <LogOut className="h-5 w-5" />
-                            Sair da Conta
-                        </button>
+                        {user && (
+                            <>
+                                <div className="h-[1px] bg-border/50 my-2" />
+                                <Link 
+                                    href={`/user/${user.id}`}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="flex items-center gap-3 p-4 rounded-2xl font-bold hover:bg-muted"
+                                >
+                                    <User className="h-5 w-5" /> Meu Perfil
+                                </Link>
+                                <button 
+                                    onClick={handleLogout}
+                                    className="flex items-center gap-3 p-4 rounded-2xl font-bold text-destructive hover:bg-destructive/10 transition-colors w-full text-left"
+                                >
+                                    <LogOut className="h-5 w-5" />
+                                    Sair da Conta
+                                </button>
+                            </>
+                        )}
                     </nav>
                 </div>
             )}

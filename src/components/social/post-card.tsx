@@ -14,7 +14,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { likePostAction } from "@/social/actions";
-import { motion } from "framer-motion";
+import Link from "next/link";
+// ... (outros imports ja existentes no arquivo)
 
 interface PostCardProps {
     post: any;
@@ -33,15 +34,15 @@ export function PostCard({ post }: PostCardProps) {
     return (
         <Card className="bg-card/50 backdrop-blur-sm border-border/50 overflow-hidden hover:border-primary/30 transition-all shadow-xl">
             <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
-                <div className="flex items-center gap-3">
+                <Link href={`/user/${post.userId}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                     <Avatar className="h-10 w-10 border border-primary/20">
-                        <AvatarImage src={post.user.avatarUrl} />
+                        <AvatarImage src={post.user?.avatarUrl || undefined} />
                         <AvatarFallback className="bg-primary/10 text-primary">
-                            {post.user.name?.substring(0, 2).toUpperCase() || "RH"}
+                            {post.user?.name?.substring(0, 2).toUpperCase() || "RH"}
                         </AvatarFallback>
                     </Avatar>
                     <div>
-                        <h3 className="text-sm font-bold tracking-tight">{post.user.name || "Aventureiro"}</h3>
+                        <h3 className="text-sm font-bold tracking-tight">{post.user?.name || "Aventureiro"}</h3>
                         <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
                             <Clock className="h-3 w-3" />
                             {new Date(post.createdAt).toLocaleDateString()}
@@ -50,7 +51,7 @@ export function PostCard({ post }: PostCardProps) {
                             </Badge>
                         </div>
                     </div>
-                </div>
+                </Link>
                 <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
                     <MoreHorizontal className="h-4 w-4" />
                 </Button>
